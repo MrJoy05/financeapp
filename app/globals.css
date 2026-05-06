@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #171717;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -12,15 +19,266 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes toggle-pop {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dollar-pulse {
+  0% {
+    box-shadow: 0 24px 80px -32px rgba(16, 185, 129, 0.35),
+      0 0 0 0 rgba(16, 185, 129, 0.35);
+  }
+  55% {
+    box-shadow: 0 28px 90px -28px rgba(16, 185, 129, 0.6),
+      0 0 0 14px transparent;
+  }
+  100% {
+    box-shadow: 0 24px 80px -32px rgba(16, 185, 129, 0.35),
+      0 0 0 0 transparent;
+  }
+}
+
+.dollar-card-pulse {
+  animation: dollar-pulse 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes drift-slow {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-8px, 6px, 0);
+  }
+}
+
+@keyframes drift-slow-reverse {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(8px, 6px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-drift-slow {
+    animation: drift-slow 10s linear infinite alternate;
+  }
+
+  .animate-drift-slow-reverse {
+    animation: drift-slow-reverse 10s linear infinite alternate;
+  }
+}
+
+@keyframes tick-up {
+  0% {
+    transform: translateY(10px);
+    opacity: 0.35;
+  }
+  45% {
+    transform: translateY(-2px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tick-down {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0.35;
+  }
+  45% {
+    transform: translateY(2px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dollar-tick-up {
+    animation: tick-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .dollar-tick-down {
+    animation: tick-down 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes delta-pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-delta-pop {
+    animation: delta-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-toggle-pop {
+    animation: toggle-pop 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift-slow,
+  .animate-drift-slow-reverse,
+  .dollar-card-pulse,
+  .animate-delta-pop,
+  .dollar-tick-up,
+  .dollar-tick-down,
+  .animate-toggle-pop,
+  .nimbus-home-bloom,
+  .nimbus-home-icon,
+  .nimbus-home-icon-a,
+  .nimbus-home-icon-b,
+  .nimbus-home-icon-c {
+    animation: none !important;
+  }
+}
+
+@keyframes nimbus-home-bloom {
+  0% {
+    transform: scale(0.42);
+    opacity: 0.9;
+    border-radius: 1.35rem;
+  }
+  32% {
+    transform: scale(1);
+    opacity: 1;
+    border-radius: 1.65rem;
+  }
+  58% {
+    transform: scale(1.05);
+    opacity: 0.98;
+    border-radius: 1.55rem;
+  }
+  100% {
+    transform: scale(18);
+    opacity: 0;
+    border-radius: 0;
+  }
+}
+
+@keyframes nimbus-home-icons {
+  0%,
+  42% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(-8px) scale(0.9);
+  }
+}
+
+@keyframes nimbus-fade-rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nimbus-home-bloom {
+    animation: nimbus-home-bloom 2.45s cubic-bezier(0.33, 1.12, 0.25, 1) both;
+  }
+
+  .nimbus-home-icon {
+    animation: nimbus-home-icons 0.95s cubic-bezier(0.45, 0, 0.2, 1) both;
+  }
+
+  .nimbus-home-icon-a {
+    animation-delay: 1s;
+  }
+
+  .nimbus-home-icon-b {
+    animation-delay: 1.08s;
+  }
+
+  .nimbus-home-icon-c {
+    animation-delay: 1.16s;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-nimbus-entry="splash"] .nimbus-reveal-pending {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+
+  [data-nimbus-entry="ready"] header.nimbus-reveal-pending {
+    animation: nimbus-fade-rise 0.68s cubic-bezier(0.2, 1, 0.32, 1) both;
+  }
+
+  [data-nimbus-entry="ready"] .nimbus-demo-ribbon.nimbus-reveal-pending {
+    animation: nimbus-fade-rise 0.68s cubic-bezier(0.2, 1, 0.32, 1) 0.1s both;
+  }
+
+  [data-nimbus-entry="ready"] .nimbus-main-stagger > *:nth-child(1) {
+    animation: nimbus-fade-rise 0.62s cubic-bezier(0.2, 1, 0.32, 1) 0.12s both;
+  }
+
+  [data-nimbus-entry="ready"] .nimbus-main-stagger > *:nth-child(2) {
+    animation: nimbus-fade-rise 0.62s cubic-bezier(0.2, 1, 0.32, 1) 0.2s both;
+  }
+
+  [data-nimbus-entry="ready"] .nimbus-main-stagger > *:nth-child(3) {
+    animation: nimbus-fade-rise 0.62s cubic-bezier(0.2, 1, 0.32, 1) 0.28s both;
+  }
+
+  [data-nimbus-entry="ready"] .nimbus-main-stagger > *:nth-child(4) {
+    animation: nimbus-fade-rise 0.62s cubic-bezier(0.2, 1, 0.32, 1) 0.36s both;
+  }
+
+  [data-nimbus-entry="ready"] .nimbus-main-stagger > *:nth-child(5) {
+    animation: nimbus-fade-rise 0.62s cubic-bezier(0.2, 1, 0.32, 1) 0.44s both;
+  }
+
+  [data-nimbus-entry="ready"] .nimbus-main-stagger > *:nth-child(6) {
+    animation: nimbus-fade-rise 0.62s cubic-bezier(0.2, 1, 0.32, 1) 0.52s both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-nimbus-entry="ready"] .nimbus-reveal-pending {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

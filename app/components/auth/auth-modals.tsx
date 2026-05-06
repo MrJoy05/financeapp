@@ -12,6 +12,7 @@ import {
 import { useAuthUi } from "../../auth/auth-ui-context";
 import { useNhostConfigured } from "../../auth/nhost-availability";
 import { formatAuthError } from "../../lib/auth-errors";
+import { getBrowserAuthRedirectOrigin } from "../../lib/auth-redirect-origin";
 import { useLanguage } from "../../i18n/language-context";
 import { Modal } from "../ui/modal";
 
@@ -194,17 +195,16 @@ function RegisterForm({ onSwitchLogin }: { onSwitchLogin: () => void }) {
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
 
-  const redirectOrigin =
-    typeof window !== "undefined" ? window.location.origin : "";
-
   const onSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
+      const origin = getBrowserAuthRedirectOrigin();
+      if (!origin) return;
       await signUpEmailPassword(email.trim(), password, {
-        redirectTo: `${redirectOrigin}/`,
+        redirectTo: `${origin}/`,
       });
     },
-    [email, password, redirectOrigin, signUpEmailPassword],
+    [email, password, signUpEmailPassword],
   );
 
   return (
@@ -280,17 +280,16 @@ function ForgotForm({ onSwitchLogin }: { onSwitchLogin: () => void }) {
   const { resetPassword, isLoading, isSent, isError, error } = useResetPassword();
   const [email, setEmail] = useState("");
 
-  const redirectOrigin =
-    typeof window !== "undefined" ? window.location.origin : "";
-
   const onSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
+      const origin = getBrowserAuthRedirectOrigin();
+      if (!origin) return;
       await resetPassword(email.trim(), {
-        redirectTo: `${redirectOrigin}/auth/set-password`,
+        redirectTo: `${origin}/auth/set-password`,
       });
     },
-    [email, redirectOrigin, resetPassword],
+    [email, resetPassword],
   );
 
   return (

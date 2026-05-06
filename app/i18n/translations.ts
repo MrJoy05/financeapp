@@ -59,7 +59,7 @@ export const translations = {
       "You can keep exploring locally; syncing across devices unlocks after you sign up.",
     authVerifyEmail: "Check your inbox to verify your email address.",
     authRedirectHint:
-      "In Nhost → Authentication → URL allow list, add your app URL (e.g. http://localhost:3000 and your production domain).",
+      "In Nhost → Authentication → allowed redirect URLs, add your origins (localhost, https://your-app.vercel.app, and wildcard https://your-app.vercel.app/* if needed).",
     authForgotLead:
       "We will email you a secure link. After opening it, set a new password on the next screen.",
     authResetSent: "If that email exists, we sent a reset link.",
@@ -263,7 +263,7 @@ export const translations = {
       "Puedes seguir explorando en este equipo; la sincronización entre dispositivos se activa al registrarte.",
     authVerifyEmail: "Revisa tu bandeja para verificar el correo.",
     authRedirectHint:
-      "En Nhost → Authentication → URL allow list, añade la URL de esta app (ej. http://localhost:3000 y tu dominio en producción).",
+      "En Nhost → Authentication → URLs de redirección permitidas, añade tus orígenes (localhost, https://tu-app.vercel.app y si aplica https://tu-app.vercel.app/*).",
     authForgotLead:
       "Te enviaremos un enlace seguro. Al abrirlo, podrás definir una contraseña nueva en la siguiente pantalla.",
     authResetSent:

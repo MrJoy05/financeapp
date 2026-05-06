@@ -17,6 +17,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Nimbus — Finanzas personales",
   description: "Resumen financiero personal con tipo de cambio USD/MXN.",
+  icons: {
+    icon: "/nimbus-mascot.png",
+    apple: "/nimbus-mascot.png",
+  },
 };
 
 export default function RootLayout({

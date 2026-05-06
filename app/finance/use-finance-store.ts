@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  fetchNimbusFinanceFromNhost,
+  upsertNimbusFinanceToNhost,
+} from "../lib/nhost-finance-remote";
+import { hasMeaningfulFinanceContent } from "../lib/finance-metrics";
+import { normalizeStore } from "../lib/finance-normalize";
 import { demoFinanceStore } from "./demo-finance-data";
 import {
   emptyFinanceStore,
@@ -8,43 +14,10 @@ import {
   type FinanceStore,
   type SavingsGoal,
 } from "./types";
+import { useFinanceNhostClient } from "./finance-nhost-client-context";
+import { useFinancePersistAuth } from "./finance-persist-auth-context";
 import { useFinanceUserKey } from "./finance-user-context";
 import { useFinanceDemoMode } from "./finance-runtime-context";
-
-function normalizeStore(
-  raw: unknown,
-  initialBase: FinanceStore,
-): FinanceStore {
-  if (!raw || typeof raw !== "object") {
-    return { ...initialBase };
-  }
-  const o = raw as Record<string, unknown>;
-  type LedgerKey = "fixed" | "subscriptions" | "variable" | "investments";
-  const rows = (k: LedgerKey): FinanceLine[] => {
-    const v = o[k];
-    return Array.isArray(v) ? (v as FinanceLine[]) : initialBase[k];
-  };
-  const goals: SavingsGoal[] = Array.isArray(o.goals)
-    ? (o.goals as SavingsGoal[])
-    : initialBase.goals;
-  const mi = o.monthlyIncomeEstimate;
-  return {
-    ...initialBase,
-    fixed: rows("fixed"),
-    subscriptions: rows("subscriptions"),
-    variable: rows("variable"),
-    investments: rows("investments"),
-    savingsTarget:
-      typeof o.savingsTarget === "number" ? o.savingsTarget : initialBase.savingsTarget,
-    savingsCurrent:
-      typeof o.savingsCurrent === "number"
-        ? o.savingsCurrent
-        : initialBase.savingsCurrent,
-    monthlyIncomeEstimate:
-      typeof mi === "number" ? mi : initialBase.monthlyIncomeEstimate,
-    goals,
-  };
-}
 
 function newId() {
   return typeof crypto !== "undefined" && crypto.randomUUID
@@ -52,9 +25,19 @@ function newId() {
     : `id-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+const remoteRestOnly =
+  process.env.NEXT_PUBLIC_FINANCE_REMOTE === "rest";
+
 export function useFinanceStore() {
   const userKey = useFinanceUserKey();
   const isDemo = useFinanceDemoMode();
+  const { authenticated, accessToken } = useFinancePersistAuth();
+  const nhostClient = useFinanceNhostClient();
+
+  const preferNhostGraphql = useMemo(() => {
+    if (remoteRestOnly) return false;
+    return nhostClient != null;
+  }, [nhostClient]);
 
   const storageKey = useMemo(
     () => `nimbus.finance.v2.${userKey}`,
@@ -71,32 +54,160 @@ export function useFinanceStore() {
     [isDemo],
   );
 
+  const cloudSync = authenticated && Boolean(accessToken);
+
+  const remoteDebounceRef = useRef<number | undefined>(undefined);
+  const accessTokenRef = useRef(accessToken);
+  accessTokenRef.current = accessToken;
+  const authenticatedRef = useRef(authenticated);
+  authenticatedRef.current = authenticated;
+  const nhostRef = useRef(nhostClient);
+  nhostRef.current = nhostClient;
+  const userKeyRef = useRef(userKey);
+  userKeyRef.current = userKey;
+
   const [store, setStore] = useState<FinanceStore>(initialSeed);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const id = window.setTimeout(() => {
+    return () => {
+      if (remoteDebounceRef.current) {
+        window.clearTimeout(remoteDebounceRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const id = window.setTimeout(async () => {
+      let nextStore = initialSeed;
       try {
         const raw =
           window.localStorage.getItem(storageKey) ??
           window.localStorage.getItem(legacyStorageKey);
         if (!raw) {
-          setStore(initialSeed);
+          nextStore = initialSeed;
         } else {
           const parsed = JSON.parse(raw) as unknown;
-          const next = normalizeStore(parsed, initialSeed);
-          setStore(next);
+          nextStore = normalizeStore(parsed, initialSeed);
           if (!window.localStorage.getItem(storageKey)) {
-            window.localStorage.setItem(storageKey, JSON.stringify(next));
+            window.localStorage.setItem(storageKey, JSON.stringify(nextStore));
           }
         }
       } catch {
-        setStore(initialSeed);
+        nextStore = initialSeed;
       }
-      setReady(true);
+
+      if (!cancelled) {
+        setStore(nextStore);
+      }
+
+      if (cloudSync && accessToken) {
+        try {
+          const nh = preferNhostGraphql ? nhostClient : null;
+
+          if (nh) {
+            const row = await fetchNimbusFinanceFromNhost(nh);
+            if (!cancelled && row) {
+              const remote = normalizeStore(row.storeRaw, initialSeed);
+              const hasRemote =
+                row.updatedAtMs > 0 || hasMeaningfulFinanceContent(remote);
+
+              if (hasRemote) {
+                setStore(remote);
+                try {
+                  window.localStorage.setItem(
+                    storageKey,
+                    JSON.stringify(remote),
+                  );
+                } catch {
+                  /* ignore */
+                }
+              }
+            }
+          } else {
+            const res = await fetch("/api/finance", {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            if (!cancelled && res.ok) {
+              const data = (await res.json()) as {
+                store?: unknown;
+                updatedAtMs?: number;
+              };
+              if (data?.store !== undefined) {
+                const remote = normalizeStore(data.store, initialSeed);
+                const hasRemote =
+                  (data.updatedAtMs ?? 0) > 0 ||
+                  hasMeaningfulFinanceContent(remote);
+
+                if (hasRemote) {
+                  setStore(remote);
+                  try {
+                    window.localStorage.setItem(
+                      storageKey,
+                      JSON.stringify(remote),
+                    );
+                  } catch {
+                    /* ignore */
+                  }
+                }
+              }
+            }
+          }
+        } catch {
+          /* keep local snapshot */
+        }
+      }
+
+      if (!cancelled) {
+        setReady(true);
+      }
     }, 0);
-    return () => window.clearTimeout(id);
-  }, [storageKey, legacyStorageKey, initialSeed]);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
+  }, [
+    storageKey,
+    legacyStorageKey,
+    initialSeed,
+    cloudSync,
+    accessToken,
+    preferNhostGraphql,
+    nhostClient,
+  ]);
+
+  const queueRemotePersist = useCallback((snapshot: FinanceStore) => {
+    if (!authenticatedRef.current || !accessTokenRef.current) return;
+
+    if (remoteDebounceRef.current) {
+      window.clearTimeout(remoteDebounceRef.current);
+    }
+    remoteDebounceRef.current = window.setTimeout(() => {
+      const t = accessTokenRef.current;
+      if (!t || !authenticatedRef.current) return;
+
+      const nh = nhostRef.current;
+      const uk = userKeyRef.current;
+      const useGql = !remoteRestOnly && nh != null && uk !== "guest";
+
+      if (useGql) {
+        void upsertNimbusFinanceToNhost(nh, uk, snapshot);
+        return;
+      }
+
+      void fetch("/api/finance", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${t}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ store: snapshot }),
+      }).catch(() => {
+        /* offline: localStorage still has latest */
+      });
+    }, 450);
+  }, []);
 
   const persist = useCallback(
     (next: FinanceStore) => {
@@ -106,12 +217,24 @@ export function useFinanceStore() {
       } catch {
         /* ignore */
       }
+      queueRemotePersist(next);
     },
-    [storageKey],
+    [storageKey, queueRemotePersist],
   );
 
   const addLine = useCallback(
-    (section: keyof Pick<FinanceStore, "fixed" | "subscriptions" | "variable" | "investments">) =>
+    (
+      section: keyof Pick<
+        FinanceStore,
+        | "fixed"
+        | "subscriptions"
+        | "housing"
+        | "insurance"
+        | "variable"
+        | "investments"
+        | "creditCards"
+      >,
+    ) =>
       (name: string, amount: number) => {
         const line: FinanceLine = { id: newId(), name, amount };
         persist({
@@ -123,7 +246,18 @@ export function useFinanceStore() {
   );
 
   const removeLine = useCallback(
-    (section: keyof Pick<FinanceStore, "fixed" | "subscriptions" | "variable" | "investments">) =>
+    (
+      section: keyof Pick<
+        FinanceStore,
+        | "fixed"
+        | "subscriptions"
+        | "housing"
+        | "insurance"
+        | "variable"
+        | "investments"
+        | "creditCards"
+      >,
+    ) =>
       (idRow: string) => {
         persist({
           ...store,

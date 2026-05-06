@@ -4,6 +4,7 @@ import { useFinanceDemoMode } from "../../finance/finance-runtime-context";
 import { useFinanceStore } from "../../finance/use-finance-store";
 import { useLanguage } from "../../i18n/language-context";
 import { FinanceAgentPanel } from "./finance-agent-panel";
+import { FinanceKnowledgeHub, FinancePlansStrip } from "./finance-plans-and-guides";
 import { FinancialHealthCard } from "./financial-health-card";
 import { LedgerSection, SavingsPlanSection } from "./ledger-section";
 import { MonthlyIncomeCard } from "./monthly-income-card";
@@ -65,6 +66,22 @@ export function FinanceWorkspace() {
           onRemove={removeLine("subscriptions")}
         />
         <LedgerSection
+          section="housing"
+          title={t("sectionHousingTitle")}
+          description={t("sectionHousingDesc")}
+          rows={store.housing}
+          onAdd={addLine("housing")}
+          onRemove={removeLine("housing")}
+        />
+        <LedgerSection
+          section="insurance"
+          title={t("sectionInsuranceTitle")}
+          description={t("sectionInsuranceDesc")}
+          rows={store.insurance}
+          onAdd={addLine("insurance")}
+          onRemove={removeLine("insurance")}
+        />
+        <LedgerSection
           section="variable"
           title={t("sectionVariableTitle")}
           description={t("sectionVariableDesc")}
@@ -80,6 +97,16 @@ export function FinanceWorkspace() {
           onAdd={addLine("investments")}
           onRemove={removeLine("investments")}
         />
+        <div className="lg:col-span-2">
+          <LedgerSection
+            section="creditCards"
+            title={t("sectionCreditTitle")}
+            description={t("sectionCreditDesc")}
+            rows={store.creditCards}
+            onAdd={addLine("creditCards")}
+            onRemove={removeLine("creditCards")}
+          />
+        </div>
       </div>
 
       <SavingsPlanSection
@@ -93,8 +120,12 @@ export function FinanceWorkspace() {
 
       <SavingsGoalsBoard />
 
+      <FinancePlansStrip />
+
+      <FinanceKnowledgeHub />
+
       <p className="text-center text-xs text-zinc-500 dark:text-zinc-500">
-        {t("financeLocalNotice")}
+        {t("financeDisclaimerFooter")}
       </p>
     </div>
   );

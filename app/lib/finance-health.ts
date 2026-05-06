@@ -22,7 +22,10 @@ function sumLines(store: FinanceStore) {
   return {
     fixed: sum(store.fixed),
     subs: sum(store.subscriptions),
+    housing: sum(store.housing),
+    insurance: sum(store.insurance),
     variable: sum(store.variable),
+    cards: sum(store.creditCards),
     invest: sum(store.investments),
   };
 }
@@ -30,9 +33,11 @@ function sumLines(store: FinanceStore) {
 /** Puntuación 0–100 + señales para UI (bilingües en el reporte). */
 export function computeFinancialHealth(store: FinanceStore): FinancialHealthReport {
   const income = store.monthlyIncomeEstimate;
-  const { fixed, subs, variable, invest } = sumLines(store);
+  const { fixed, subs, housing, insurance, variable, cards, invest } =
+    sumLines(store);
 
-  const monthlyOut = fixed + subs + variable;
+  const monthlyOut =
+    fixed + subs + housing + insurance + variable + cards;
 
   if (!(income > 0)) {
     return {

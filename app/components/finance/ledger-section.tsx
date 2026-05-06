@@ -7,8 +7,11 @@ import { useLanguage } from "../../i18n/language-context";
 type SectionKey =
   | "fixed"
   | "subscriptions"
+  | "housing"
+  | "insurance"
   | "variable"
-  | "investments";
+  | "investments"
+  | "creditCards";
 
 export function LedgerSection({
   section,
@@ -60,6 +63,12 @@ export function LedgerSection({
   const sectionAccent =
     section === "subscriptions"
       ? "from-violet-500/10 to-fuchsia-500/5 ring-violet-200/70 dark:ring-violet-800/60"
+      : section === "housing"
+        ? "from-zinc-500/15 to-zinc-400/5 ring-zinc-200/70 dark:ring-zinc-600/55"
+      : section === "insurance"
+        ? "from-rose-500/10 to-pink-500/5 ring-rose-200/70 dark:ring-rose-800/50"
+      : section === "creditCards"
+        ? "from-indigo-500/10 to-blue-500/5 ring-indigo-200/70 dark:ring-indigo-800/55"
       : section === "variable"
         ? "from-amber-500/10 to-orange-500/5 ring-amber-200/70 dark:ring-amber-800/50"
         : section === "investments"

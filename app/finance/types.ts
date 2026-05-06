@@ -16,6 +16,10 @@ export type SavingsGoal = {
 export type FinanceStore = {
   fixed: FinanceLine[];
   subscriptions: FinanceLine[];
+  /** Renta, hipoteca u otros gastos principales del hogar (mensual). */
+  housing: FinanceLine[];
+  /** Primas mensuales o anualizadas (auto, médico, vida, etc.). */
+  insurance: FinanceLine[];
   variable: FinanceLine[];
   savingsTarget: number;
   savingsCurrent: number;
@@ -23,15 +27,20 @@ export type FinanceStore = {
   monthlyIncomeEstimate: number;
   goals: SavingsGoal[];
   investments: FinanceLine[];
+  /** Pago mínimo, anualidad o cargo recurrente por tarjeta (mensual). */
+  creditCards: FinanceLine[];
 };
 
 export const emptyFinanceStore: FinanceStore = {
   fixed: [],
   subscriptions: [],
+  housing: [],
+  insurance: [],
   variable: [],
   savingsTarget: 0,
   savingsCurrent: 0,
   monthlyIncomeEstimate: 0,
   goals: [],
   investments: [],
+  creditCards: [],
 };

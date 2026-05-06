@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthenticated } from "@nhost/react";
@@ -50,11 +51,15 @@ export function DashboardHeader() {
           href="/"
           className="group flex shrink-0 items-center gap-2 rounded-lg outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500/80"
         >
-          <span
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-xs font-semibold tracking-tight text-zinc-900 shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            aria-hidden
-          >
-            N
+          <span className="relative inline-flex h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
+            <Image
+              src="/nimbus-mascot.png"
+              alt={t("brand")}
+              width={36}
+              height={36}
+              className="object-cover"
+              priority
+            />
           </span>
           <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             {t("brand")}

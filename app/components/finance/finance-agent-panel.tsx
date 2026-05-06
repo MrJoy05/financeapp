@@ -55,6 +55,16 @@ function buildCoachReply(
       "Disciplina de inversión: aportes automáticos, diversificación regional y evita concentrar compras por estrés o euforia.",
     );
   }
+  if (
+    lower.includes("tarjeta") ||
+    lower.includes("credit card") ||
+    lower.includes("minimum")
+  ) {
+    add(
+      "Credit cards: automate payment ≥ statement balance, track annual fees in your cards ledger, and refinance high-APR balances if a lower-cost line is available.",
+      "Tarjetas: automatiza pago del saldo estado de cuenta cuando puedas, lleva anualidades en el tablero de tarjetas y reestructura líneas con TAC altísima si encuentras alternativa más barata.",
+    );
+  }
 
   if (!lines[locale].length) {
     add(

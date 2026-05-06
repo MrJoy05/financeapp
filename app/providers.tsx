@@ -8,6 +8,15 @@ import { NhostConfiguredBoundary } from "./auth/nhost-availability";
 import { AccountModal } from "./components/account/account-modal";
 import { AccountUiProvider } from "./components/account/account-ui-context";
 import { AuthModals } from "./components/auth/auth-modals";
+import { GuestRegisterPromptModal } from "./components/auth/guest-register-prompt";
+import {
+  FinanceNhostClientBinder,
+  FinanceNhostClientGuest,
+} from "./finance/finance-nhost-client-context";
+import {
+  FinancePersistAuthGuest,
+  FinancePersistAuthNhostBridge,
+} from "./finance/finance-persist-auth-context";
 import { FinanceRuntimeProvider } from "./finance/finance-runtime-context";
 import { FinanceUserBridge } from "./finance/finance-user-bridge";
 import { FinanceUserProvider } from "./finance/finance-user-context";
@@ -38,20 +47,29 @@ export function Providers({ children }: { children: React.ReactNode }) {
               <AccountUiProvider>
                 {nhost ? (
                   <NhostProvider nhost={nhost}>
-                    <FinanceUserBridge>{children}</FinanceUserBridge>
+                    <FinanceNhostClientBinder>
+                      <FinancePersistAuthNhostBridge>
+                        <FinanceUserBridge>{children}</FinanceUserBridge>
+                      </FinancePersistAuthNhostBridge>
+                    </FinanceNhostClientBinder>
                     <AuthModals />
+                    <GuestRegisterPromptModal />
                     <AccountModal />
                   </NhostProvider>
                 ) : (
-                  <FinanceRuntimeProvider isDemo>
-                    <>
-                      <FinanceUserProvider userKey="guest">
-                        {children}
-                      </FinanceUserProvider>
-                      <AuthModals />
-                      <AccountModal />
-                    </>
-                  </FinanceRuntimeProvider>
+                  <FinanceNhostClientGuest>
+                    <FinancePersistAuthGuest>
+                      <FinanceRuntimeProvider isDemo>
+                        <>
+                          <FinanceUserProvider userKey="guest">
+                            {children}
+                          </FinanceUserProvider>
+                          <AuthModals />
+                          <AccountModal />
+                        </>
+                      </FinanceRuntimeProvider>
+                    </FinancePersistAuthGuest>
+                  </FinanceNhostClientGuest>
                 )}
               </AccountUiProvider>
             </AuthUiProvider>

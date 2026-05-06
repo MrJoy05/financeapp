@@ -32,6 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# local LibSQL file DB (default when DATABASE_URL is unset on server)
+/.data/
 
 # vercel
 .vercel

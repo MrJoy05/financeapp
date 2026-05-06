@@ -49,6 +49,14 @@ export const translations = {
     authHaveAccount: "Already have an account?",
     authSignInAction: "Sign in",
     authCreateAccount: "Create account",
+    registerPromptTitle: "Create a free account",
+    registerPromptBody:
+      "To keep using Nimbus with encrypted sign-in and cloud backup for your workbook, register — it does not cost anything.",
+    registerPromptCta: "Register free",
+    registerPromptLater: "Not now",
+    registerPromptLogin: "I already have an account",
+    registerPromptNote:
+      "You can keep exploring locally; syncing across devices unlocks after you sign up.",
     authVerifyEmail: "Check your inbox to verify your email address.",
     authRedirectHint:
       "In Nhost → Authentication → URL allow list, add your app URL (e.g. http://localhost:3000 and your production domain).",
@@ -60,11 +68,41 @@ export const translations = {
     authDisabled: "Auth",
     financeSectionsTitle: "Your categories & plans",
     financeSectionsLead:
-      "Fixed costs, subscriptions, variable spending, investments, and a simple savings target. Data is stored in this browser (per Nhost user when logged in).",
-    financeLocalNotice:
-      "GraphQL tables on Nhost can replace local storage — add your schema in the console and plug queries next.",
+      "Fixed bills, subscriptions, housing, insurance, variable spend, cards, investments, and named goals — organized in one place. Data stays in this browser unless you sync with your account.",
+    financeDisclaimerFooter:
+      "Nimbus is educational tooling — not regulated financial, tax, or legal advice.",
+    financePlansTitle: "Plans that pair with your goals",
+    financePlansLead:
+      "Rough templates — tune percentages to your income, obligations, and risk tolerance.",
+    financePlanStarterTitle: "Starter — stability first",
+    financePlanStarterBody:
+      "• Build at least one month of expenses in cash.\n• After fixed costs, target ~5–10% of income to named goals.\n• Pay cards above the minimum whenever you can.",
+    financePlanBalancedTitle: "Balanced — cushion + growth",
+    financePlanBalancedBody:
+      "• Aim for ~3–6 months of expense coverage.\n• Split discretionary surplus across goals + diversified indexes.\n• Review subscriptions and insurance once a year.",
+    financePlanGrowthTitle: "Growth — long-term tilt",
+    financePlanGrowthBody:
+      "• Fit only once buffers are funded and income is dependable.\n• Keep broad diversification; skip single-stock concentration.\n• Rebalance on a calendar, not on headlines.",
+    guidesHubTitle: "Guides & starting points",
+    guidesHubLead:
+      "Explainers plus practical checklists — always confirm specifics with banks, insurers, and licensed advisors.",
+    guideCompoundTitle: "How compound growth works",
+    guideCompoundBody:
+      "Returns apply on both principal and prior gains — small early deposits can outperform larger late deposits. Debt compounds against you too (especially high APR revolving cards).\n\nRule of ~72 (intuition): 72 ÷ expected annual rate ≈ years to double. Not a prediction — ignores fees, volatility, inflation, taxes.\n\nHigher compounding frequency matters a little; long holding periods matter a lot.",
+    guidePortfoliosTitle: "Investment menu ideas (education only)",
+    guidePortfoliosBody:
+      "• Global stock/bond index funds as core.\n• Target-date envelopes for milestone years.\n• Short-duration cash instruments for liquidity.\n• Optional satellite sleeves (listed real assets) — modest sizing.\n\nPast performance ≠ future results. Taxes and brokerage rules differ — personalize with a fiduciary where needed.",
+    guideBanksTitle: "Bank-account checklist",
+    guideBanksBody:
+      "Prioritize safeguards (deposit insurance limits), clarity on fees/FX, uptime of the mobile app, and ATM reach. MX: compare CETES/sofinapped rates vs commissions. Abroad: HY savings versus broker sweep yields — always read disclosures.",
+    guideCardsTitle: "Credit-card hygiene",
+    guideCardsBody:
+      "Capture minimums and due cycles here.\nPrefer paying statement balances monthly to dodge interest.\nWeigh yearly fees versus rewards you realistically earn; inspect foreign transaction fees.\nReduce unused cards — smaller attack surface for fraud.",
+    guideRentInsuranceTitle: "Rent, insurance, repeating bills",
+    guideRentInsuranceBody:
+      "Splitting housing and premiums makes rent hikes vs renewal premiums obvious.\nFor insurance, log deductibles/exclusions beside the premium equivalents you track.\nNegotiate telecom contracts and rerun auto quotes annually.",
     sectionFixedTitle: "Fixed expenses",
-    sectionFixedDesc: "Rent, insurance, predictable monthly bills.",
+    sectionFixedDesc: "Utilities and recurring dues outside housing premiums.",
     sectionSubsTitle: "Subscriptions",
     sectionSubsDesc: "Streaming, software, memberships.",
     sectionVariableTitle: "Variable expenses",
@@ -120,7 +158,17 @@ export const translations = {
     monthlyIncomeDesc: "Used for ratios in the health panel and KPIs.",
     monthlyIncomeSave: "Save income",
     goalsExtendedTitle: "Savings goals",
-    goalsExtendedLead: "House, travel, emergency buffer — track target vs progress.",
+    goalsExtendedLead:
+      "House, travel, emergency buffer — quantify each goal above, then match it to one of the plan templates.",
+    sectionHousingTitle: "Housing",
+    sectionHousingDesc:
+      "Rent or mortgage (principal & interest estimate) each month.",
+    sectionInsuranceTitle: "Insurance premiums",
+    sectionInsuranceDesc:
+      "Auto, medical, renters, term life — approximate monthly cost.",
+    sectionCreditTitle: "Credit cards",
+    sectionCreditDesc:
+      "Minimums, installments, recurring charges — use notes for APR or payoff targets.",
     goalTarget: "Target (MXN)",
     goalCurrent: "Saved (MXN)",
     goalAddPlaceholder: "e.g. Apartment down payment",
@@ -205,6 +253,14 @@ export const translations = {
     authHaveAccount: "¿Ya tienes cuenta?",
     authSignInAction: "Entrar",
     authCreateAccount: "Crear cuenta",
+    registerPromptTitle: "Regístrate gratis",
+    registerPromptBody:
+      "Para seguir usando Nimbus con inicio de sesión seguro y respaldo en la nube de tu libro, crea una cuenta — no tiene costo.",
+    registerPromptCta: "Registrarme gratis",
+    registerPromptLater: "Ahora no",
+    registerPromptLogin: "Ya tengo cuenta",
+    registerPromptNote:
+      "Puedes seguir explorando en este equipo; la sincronización entre dispositivos se activa al registrarte.",
     authVerifyEmail: "Revisa tu bandeja para verificar el correo.",
     authRedirectHint:
       "En Nhost → Authentication → URL allow list, añade la URL de esta app (ej. http://localhost:3000 y tu dominio en producción).",
@@ -217,11 +273,41 @@ export const translations = {
     authDisabled: "Cuenta",
     financeSectionsTitle: "Tus categorías y planes",
     financeSectionsLead:
-      "Gastos fijos, suscripciones, gasto variable, inversiones y una meta de ahorro simple. Los datos se guardan en este navegador (por usuario de Nhost si iniciaste sesión).",
-    financeLocalNotice:
-      "Las tablas GraphQL en Nhost pueden sustituir el almacenamiento local: crea tu esquema en la consola y conecta consultas después.",
+      "Servicios fijos, suscripciones, vivienda, seguros, gasto variable, tarjetas, inversiones y metas con nombre — todo en un solo tablero. Los datos quedan en este navegador salvo que sincronicemos con tu cuenta.",
+    financeDisclaimerFooter:
+      "Nimbus es material educativo — no constituye asesoría financiera, fiscal o legal regulada.",
+    financePlansTitle: "Planes que acompañan tus metas",
+    financePlansLead:
+      "Plantillas orientativas — ajusta porcentajes a tu ingreso, obligaciones y tolerancia al riesgo.",
+    financePlanStarterTitle: "Inicio — estabilidad primero",
+    financePlanStarterBody:
+      "• Apunta a al menos un mes de gastos en efectivo digital.\n• Después de lo fijo, dirige ~5–10% del ingreso a metas concretas.\n• Paga tarjetas por encima del mínimo siempre que puedas.",
+    financePlanBalancedTitle: "Equilibrado — colchón + crecimiento",
+    financePlanBalancedBody:
+      "• Busca ~3–6 meses de gastos cubiertos.\n• Reparte el superávit entre metas e índices diversificados.\n• Revisa suscripciones y seguros al menos una vez al año.",
+    financePlanGrowthTitle: "Crecimiento — foco largo plazo",
+    financePlanGrowthBody:
+      "• Solo si ya tienes colchón e ingresos estables.\n• Mantén diversificación global; evita concentrarte en una sola emisora.\n• Rebalancea con calendario, no con titulares.",
+    guidesHubTitle: "Guías y puntos de partida",
+    guidesHubLead:
+      "Resúmenes y listas — confirma montos, comisiones y coberturas con tu banco, aseguradora o asesor licenciado.",
+    guideCompoundTitle: "Cómo funciona el interés compuesto",
+    guideCompoundBody:
+      "Las ganancias se aplican sobre capital y sobre lo ya acumulado: aportaciones pequeñas al inicio pueden superar aportaciones grandes después. Las deudas también se capitalizan en tu contra (sobre todo tarjetas con TAC altísima).\n\nRegla práctica (~72): 72 ÷ tasa anual esperada ≈ años para duplicar (intuición, no promesa — ignora comisiones, volatilidad, inflación e impuestos).\n\nLa frecuencia de capitalización ayuda un poco; el horizonte largo ayuda mucho.",
+    guidePortfoliosTitle: "Alternativas de portafolio (solo educación)",
+    guidePortfoliosBody:
+      "• Fondos/ETFs de renta variable y deuda globales como núcleo.\n• Carteras con fecha objetivo para metas futuras.\n• Instrumentos cortos para liquidez inmediata.\n• Satélites modestos (REITs listados, etc.).\n\nRendimientos pasados no garantizan futuros. Reglas fiscales y de casas de bolsa cambian — personaliza con ayuda profesional si aplica.",
+    guideBanksTitle: "Elegir cuentas bancarias",
+    guideBanksBody:
+      "Prioriza seguros de depósito vigentes, comisiones claras, app confiable y red de cajeros. En México compara tasas en instituciones reguladas (bancos, SOFIPOs) y lee letras chicas. En el extranjero contrasta cuentas remuneradas vs. sweeps de broker — revisa prospectos.",
+    guideCardsTitle: "Gestionar tarjetas de crédito",
+    guideCardsBody:
+      "Marca aquí mínimos, fechas de corte/pago y anualidades prorrateadas.\nCuando puedas liquida saldo estado de cuenta mensualmente para cortar revolvencia.\nCompara perks vs comisiones saladas; vigila cargos extranjeros (FX).\nElimina tarjetas poco usadas para reducir fraude superficie.",
+    guideRentInsuranceTitle: "Renta, seguros y recibos repetidos",
+    guideRentInsuranceBody:
+      "Separar renta/hipoteca y primas hace evidentes alzas o renovaciones caras.\nAnota deducibles y exclusiones junto al costo mensual equivalente.\nRenegocia telecom y vuelve a cotizar auto/casa al renovar.",
     sectionFixedTitle: "Gastos fijos",
-    sectionFixedDesc: "Renta, seguros y pagos recurrentes predecibles.",
+    sectionFixedDesc: "Servicios y cuotas recurrentes fuera de vivienda y seguros.",
     sectionSubsTitle: "Suscripciones",
     sectionSubsDesc: "Streaming, software, membresías.",
     sectionVariableTitle: "Gastos variables",
@@ -278,7 +364,17 @@ export const translations = {
     monthlyIncomeDesc: "Sirve para ratios de salud y KPIs.",
     monthlyIncomeSave: "Guardar ingreso",
     goalsExtendedTitle: "Metas de ahorro",
-    goalsExtendedLead: "Casa, viaje, colchón — objetivo vs avance.",
+    goalsExtendedLead:
+      "Casa, viaje, colchón — pon cifras arriba y alinéalas con una plantilla de plan.",
+    sectionHousingTitle: "Vivienda",
+    sectionHousingDesc:
+      "Renta o hipoteca (capital + interés estimado) mensual.",
+    sectionInsuranceTitle: "Primas de seguros",
+    sectionInsuranceDesc:
+      "Auto, gastos médicos, hogar, vida temporal — costo mensual equivalente.",
+    sectionCreditTitle: "Tarjetas de crédito",
+    sectionCreditDesc:
+      "Mínimos, MSI recurrente, anualidad prorrateada — usa notas para TAC u objetivos de pago.",
     goalTarget: "Meta (MXN)",
     goalCurrent: "Ahorrado (MXN)",
     goalAddPlaceholder: "Ej. enganche departamento",
